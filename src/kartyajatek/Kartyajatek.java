@@ -7,8 +7,11 @@ public class Kartyajatek {
     public static void main(String[] args) {
         Kartyajatek kj = new Kartyajatek();
         String[] pakli = kj.kartyafelt();
-        kj.kiiratas(pakli);
-        kj.kever(pakli);
+
+        for (int i = 0; i < 3; i++) {
+            kj.kiiratas(pakli);
+            pakli = kj.oszlopCsereEsKever(pakli);
+        }
     }
 
     public String[] kartyafelt() {
@@ -30,38 +33,61 @@ public class Kartyajatek {
         return pakli;
     }
 
-    public int melyik() {
+    private int melyik() {
         Scanner scn = new Scanner(System.in);
         System.out.println("Melyik oszlopban van a lap?");
         int hely = Integer.parseInt(scn.nextLine());
         return hely;
     }
 
-    public String[] kever(String[] pakli) {//Mindig középrekerüljön a választott oszlop
+    private String[] kever(String[] keverendoPakli) {//Mindig középrekerüljön a választott oszlop
+        String[] megkevertTomb = new String[21];
+        int kovetkezoSorSzamlalo = 0;
+        for (int i = 0; i < keverendoPakli.length/3; i++) {
+            megkevertTomb[i+kovetkezoSorSzamlalo] = keverendoPakli[i];
+            megkevertTomb[i+1+kovetkezoSorSzamlalo] = keverendoPakli[i + 7];
+            megkevertTomb[i+2+kovetkezoSorSzamlalo] = keverendoPakli[i + 14];
+            kovetkezoSorSzamlalo+=2;
+        }
+        return megkevertTomb;
+    }
+
+    private void ezvolt(String[] pakli) {
+        System.out.printf("Ez volt a kártya: %s", pakli[10]);
+    }
+
+    private String[] oszlopCsereEsKever(String[] pakli) {
         Kartyajatek kj = new Kartyajatek();
         int poz = kj.melyik();
         String[] IdeiglenesOszlop = new String[7];
         if (poz == 1) {
-            for (int i = 0; i < pakli.length/3; i++) {
+            for (int i = 0; i < pakli.length / 3; i++) {
                 IdeiglenesOszlop[i] = pakli[i];
             }
+            for (int i = 0; i < pakli.length / 3; i++) {
+                pakli[i] = pakli[i + 7];
+                pakli[i + 7] = IdeiglenesOszlop[i];
+            }
+        } else if (poz == 3) {
+            for (int i = 0; i < pakli.length / 3; i++) {
+                IdeiglenesOszlop[i] = pakli[i + 14];
+            }
+            for (int i = 0; i < pakli.length / 3; i++) {
+                pakli[i + 14] = pakli[i + 7];
+                pakli[i + 7] = IdeiglenesOszlop[i];
+            }
         }
-        else if(poz == 3){
-            
-        }
-        return pakli;
+        String[] megkevert = kj.kever(pakli);
+        return megkevert;
     }
 
-    public void ezvolt(String[] pakli) {
-        System.out.printf("Ez volt a kártya: %s", pakli[10]);
-    }
+    private void kiiratas(String[] lapok) {
+        for (int i = 0; i < lapok.length / 3; i++) {
+            System.out.print("|" + lapok[i] + "| ");
+            System.out.print("|" + lapok[i + 7] + "| ");
+            System.out.println("|" + lapok[i + 14] + "|");
 
-    public void kiiratas(String[] lapok) {
-        for (int i = 0; i < lapok.length/3; i++) {
-            System.out.print("|"+lapok[i]+"| ");
-            System.out.print("|"+lapok[i+7]+"| ");
-            System.out.println("|"+lapok[i+14]+"|");
-            
         }
+        System.out.println("IIIIIIII");
     }
 }
